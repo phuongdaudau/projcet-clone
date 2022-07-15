@@ -1,0 +1,144 @@
+@extends('layouts.member.app')
+
+@section('title','List Products')
+@push('css')
+<style>
+    .circle-color{
+        border-radius:50%; 
+        border:1px solid #e8e9eb;
+    }
+    .pagination{
+        margin: 50px 30px;
+        float: right;
+    }
+    .set-width{
+        width: 315px !important;
+        height: 300px;
+    }
+    span a {
+        color: #6c757d;
+        text-decoration: none;
+    }
+    .form-group select {
+        width: 200px;
+        margin: 10px 10px;
+    }
+</style>
+@endpush
+
+@section('content')
+<form action="{{ url('/member/products') }}" method="GET">
+    <div class="row" id="filter">
+        <div class="form-group">
+            <select data-filter="make" name="category_id" class="filter-make filter form-control">
+                <option value="" >Select Category</option>
+                <option value="" >Show All</option>
+                @foreach($categories as $category)
+                <option value="{{$category->id}}" {{ request()->get('category_id') == $category->id ? 'selected' : '' }}>{{$category->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
+            <select data-filter="model" class="filter-model filter form-control">
+                <option value="" >Select Price Range</option>
+                <option value="">Show All</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="page" id="page" class="filter-price filter form-control">
+                <option value="6">6</option>
+                <option value="12">12</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success form-group" style="height: 40px;
+    margin: 10px;"> Filter </button>
+    </div> 
+</form>
+<div id="grid">
+	
+    @foreach($products as $item)
+    @php
+        $listSize = "";
+        $images = explode(",", $item->images);
+        $frontImage = $images[0];
+        foreach($item->sizes as $size){
+            $listSize = $listSize .",". $size->name;
+        }
+    @endphp
+    <div class="product">
+        <div class="make3D">
+            <div class="product-front">
+                <div class="shadow"></div>
+                <img src="{{$frontImage}}" alt="" />
+                <div class="image_overlay"></div>
+                <div class="add_to_cart">Add to cart</div>
+                <div class="view_gallery">View gallery</div>                
+                <div class="stats">        	
+                    <div class="stats-container set-width">
+                        <span class="product_price">${{$item->price}}</span>
+                        <span class="product_name"><a href="{{route('product.detail', $item->slug)}}">{{$item->name}}</a></span>    
+                        <p>{{$item->category->name}}</p>                                            
+                        <div class="product-options">
+                            <strong>SIZES</strong>
+                            <span>{{ltrim($listSize,",")}}</span>
+                            <strong>COLORS</strong>
+                            <div class="colors">
+                                @foreach($item->colors as $color)
+                                <div class="circle-color" style="background: <?php echo $color->color_hex ?>;"><span></span></div>
+                                @endforeach
+                            </div>
+                        </div>                       
+                    </div>                         
+                </div>
+            </div>
+            
+            <div class="product-back">
+                <div class="shadow"></div>
+                <div class="carousel">
+                    <ul class="carousel-container">
+                        @foreach($images as $image)
+                        <li><img src="{{$image}}" alt="" /></li>
+                        @endforeach
+                    </ul>
+                    <div class="arrows-perspective">
+                        <div class="carouselPrev">
+                            <div class="y"></div>
+                            <div class="x"></div>
+                        </div>
+                        <div class="carouselNext">
+                            <div class="y"></div>
+                            <div class="x"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-back">
+                    <div class="cy"></div>
+                    <div class="cx"></div>
+                </div>
+            </div>	  
+        </div>	
+    </div>    
+    @endforeach
+    <div class="row">
+        @if(count($products) >=6)
+        {{ $products->links('vendor.pagination.bootstrap-4', ['paginator' => $products]) }}
+        @endif
+    </div>
+</div>
+@endsection
+@push('script')
+<script>
+
+    $(document).ready(function () {
+
+        $('page').on('change', function(){
+        // Cậu có thể thực hiện gửi lên resquet để phân trang chỗ này 
+        })
+
+    })
+
+        
+    </script>
+@endpush
