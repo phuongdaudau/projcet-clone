@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('product.list');
 });
 Route::get('products', [App\Http\Controllers\Member\ProductController::class, 'list'])->name('product.list');
 Route::get('products/search', [App\Http\Controllers\Member\ProductController::class, 'search'])->name('product.search');
