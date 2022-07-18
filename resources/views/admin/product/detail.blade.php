@@ -80,8 +80,8 @@
                                 @endphp
                                 @foreach($images as $image)
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <a href="{{ asset('storage/product/'.$image) }}" >
-                                            <img class="img-responsive thumbnail" src="{{ asset('storage/product/'.$image) }}">
+                                        <a href="{{ asset($image) }}" target="_blank" >
+                                            <img class="img-responsive thumbnail" src="{{ asset($image) }}">
                                         </a>
                                     </div>
                                 @endforeach

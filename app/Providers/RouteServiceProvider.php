@@ -9,16 +9,18 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
-{
-    /**
+{/**
      * The path to the "home" route for your application.
      *
      * This is used by Laravel authentication to redirect users after login.
      *
      * @var string
      */
-    public const HOME = '/dashboard';
+    public const HOME = '/';
+    public const HOME_ADMIN = '/admin';
 
+    protected $namespace = 'App\Http\Controllers';
+    protected $adminNamespace = 'App\Http\Controllers\Admin';
     /**
      * The controller namespace for the application.
      *
@@ -38,16 +40,18 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
+            Route::middleware('web')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/web.php'));
 
             Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
+                 ->prefix('admin')
+                 ->name('admin.')
+                 ->namespace($this->adminNamespace)
+                 ->group(base_path('routes/admin.php'));
         });
     }
+
     /**
      * Configure the rate limiters for the application.
      *

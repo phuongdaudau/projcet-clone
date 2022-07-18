@@ -33,10 +33,22 @@ class ProductController extends Controller
 
     public function list(Request $request)
     {
-        $params = $request->all() ?? [];
-        $params['page'] = $request->page ?? 6;
+        $params['orderBy'] = [
+            'colum' => 'id',
+            'dir'   => 'desc'
+        ];
+        $params['recorder'] = $request->get('recorder');
+
+        if($request->get('search')){
+            $params['search'] = $request->get('search');
+        }
+
+        if($request->get('category_id') && $request->get('category_id') != 0){
+            $params['category_id'] = $request->get('category_id');
+        }
 
         $products = $this->productService->filterProducts($params);
+
         $sizes = $this->sizeService->getListSize();
         $colors = $this->colorService->getListColor();
         $categories = $this->categoryService->getListCategory();

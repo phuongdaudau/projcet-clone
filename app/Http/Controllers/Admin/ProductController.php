@@ -38,7 +38,19 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = $this->productService->getListProduct();
+
+        $params['orderBy'] = [
+            'colum' => 'id',
+            'dir'   => 'desc'
+        ];
+        $params['recorder'] = $request->get('recorder');
+
+        if($request->get('search')){
+            $params['search'] = $request->get('search');
+        }
+
+        $products = $this->productService->filterProducts($params);
+
         return view('admin.product.index', compact('products'));
     }
 
