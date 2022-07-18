@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Services\CategoryService;
 use App\Services\ColorService;
 use App\Services\ProductService;
@@ -35,7 +36,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $products = $this->productService->getListProduct();
         return view('admin.product.index', compact('products'));
@@ -73,7 +74,7 @@ class ProductController extends Controller
             'images' => $request->images,
         ];
         $this->productService->storeProduct($attributes);
-        return redirect()->back();
+        return redirect()->route('admin.product.index');
     }
 
     /**
@@ -113,7 +114,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductUpdateRequest $request, $id)
     {
         $attributes = [
             "name" => $request->name,
@@ -138,6 +139,6 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $this->productService->deleteProduct($id);
-        return redirect()->back();
+        return redirect()->route('admin.product.index');
     }
 }

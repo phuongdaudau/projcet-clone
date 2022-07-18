@@ -4,7 +4,7 @@
             <li><a href="{{route('product.list')}}">Home</a></li>
             <li><a href="">BRANDS</a></li>
             <li><a href="">DESIGNERS</a></li>
-            <li><a href="">CONTACT</a></li>	                                              
+            <li><a href="{{ route('login') }}">LOGIN</a></li>	                                              
         </ul>
     </div>	
     <div class="col-6 pt-4">

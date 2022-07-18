@@ -32,7 +32,7 @@
                                 @endphp
                                     <tr>
                                         <td class="shoping__cart__item">
-                                            <img style="width: 150px;" src="{{ $images[0] }}" alt="">
+                                            <img style="width: 150px;" src="{{ asset('storage/product/'.$images[1]) }}" alt="">
                                             <h5><a href="{{route('product.detail', $item['productInfo']->slug)}}">{{$item['productInfo']->name }}</a></h5>
                                         </td>
                                         <td class="shoping__cart__price">

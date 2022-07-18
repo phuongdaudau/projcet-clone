@@ -76,12 +76,12 @@
                             <div id="aniimated-thumbnials" class="list-unstyled row clearfix">
                                 @php
                                     $imgs = explode(",", $product->images);
-                                    $images = array_slice($imgs,1,5);
+                                    $images = array_slice($imgs,1,3);
                                 @endphp
                                 @foreach($images as $image)
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <a href="{{$image}}" data-sub-html="Demo Description">
-                                            <img class="img-responsive thumbnail" src="{{$image}}">
+                                        <a href="{{ asset('storage/product/'.$image) }}" >
+                                            <img class="img-responsive thumbnail" src="{{ asset('storage/product/'.$image) }}">
                                         </a>
                                     </div>
                                 @endforeach
@@ -92,16 +92,16 @@
             </div> 
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="header bg-indigo">
-                        <h2>
-                            Description
-                        </h2>
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                               Description
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <textarea id="tinymce" name="description" readonly>{{$product->description}}</textarea>
+                        </div>
                     </div>
-                    <div class="body">
-                    {!! $product->description !!}
-                    </div>
-                </div>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -140,6 +140,14 @@
                 </div>
                 </div>
             </div> 
+            <a style="margin-top: 30px;" class="btn btn-danger m-t-15 waves-effect" href="{{ route('admin.product.edit', $product->id) }}">Edit</a>
+            <button style="margin-top: 30px;"  class= "btn btn-danger waves-effect" type="button" onclick="deleteproduct({{ $product->id }})">
+                    Delete
+            </button>
+            <form id="delete-form-{{ $product->id }}" action=" {{ route('admin.product.destroy', $product->id)}}" method="POST" style="display: none;">
+                    @csrf
+                    @method('DELETE')
+            </form>
     </div>
 @endsection
 
@@ -148,7 +156,44 @@
     <script src="{{ asset('assets/plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <!-- TinyMCE -->
     <script src="{{ asset('assets/plugins/tinymce/tinymce.js') }}"></script>
-    <script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        function deleteproduct(id){
+            console.log(1);
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                  confirmButton: 'btn btn-success',
+                  cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+              })
+              
+              swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  event.preventDefault();
+                  document.getElementById('delete-form-'+id).submit();
+                } else if (
+                  /* Read more about handling dismissals below */
+                  result.dismiss === Swal.DismissReason.cancel
+                ) {
+                  swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your data is safe :)',
+                    'error'
+                  )
+                }
+              })
+        }
+
         $(function () {
             //TinyMCE
             tinymce.init({

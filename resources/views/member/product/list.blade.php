@@ -27,12 +27,12 @@
 @endpush
 
 @section('content')
-<form action="{{ url('/member/products') }}" method="GET">
+<form action="{{ url('/') }}" method="GET">
     <div class="row" id="filter">
         <div class="form-group">
             <select data-filter="make" name="category_id" class="filter-make filter form-control">
                 <option value="" >Select Category</option>
-                <option value="" >Show All</option>
+                <option value="0" >Show All</option>
                 @foreach($categories as $category)
                 <option value="{{$category->id}}" {{ request()->get('category_id') == $category->id ? 'selected' : '' }}>{{$category->name}}</option>
                 @endforeach
@@ -61,8 +61,8 @@
     @foreach($products as $item)
     @php
         $listSize = "";
-        $images = explode(",", $item->images);
-        $frontImage = $images[0];
+        $imgs = explode(",", $item->images);
+        $images = array_slice($imgs,1,3);
         foreach($item->sizes as $size){
             $listSize = $listSize .",". $size->name;
         }
@@ -71,7 +71,7 @@
         <div class="make3D">
             <div class="product-front">
                 <div class="shadow"></div>
-                <img src="{{$frontImage}}" alt="" />
+                <img src="{{ asset('storage/product/'.$images[0]) }}" alt="" />
                 <div class="image_overlay"></div>
                 <div class="add_to_cart">Add to cart</div>
                 <div class="view_gallery">View gallery</div>                
@@ -99,7 +99,7 @@
                 <div class="carousel">
                     <ul class="carousel-container">
                         @foreach($images as $image)
-                        <li><img src="{{$image}}" alt="" /></li>
+                        <li><img src="{{ asset('storage/product/'.$image) }}" alt="" /></li>
                         @endforeach
                     </ul>
                     <div class="arrows-perspective">
@@ -122,9 +122,7 @@
     </div>    
     @endforeach
     <div class="row">
-        @if(count($products) >=6)
         {{ $products->links('vendor.pagination.bootstrap-4', ['paginator' => $products]) }}
-        @endif
     </div>
 </div>
 @endsection
@@ -134,7 +132,7 @@
     $(document).ready(function () {
 
         $('page').on('change', function(){
-        // Cậu có thể thực hiện gửi lên resquet để phân trang chỗ này 
+        // có thể thực hiện gửi lên resquet để phân trang chỗ này 
         })
 
     })

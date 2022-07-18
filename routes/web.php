@@ -16,10 +16,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('products', [App\Http\Controllers\Member\ProductController::class, 'list'])->name('product.list');
+Route::get('/', [App\Http\Controllers\Member\ProductController::class, 'list'])->name('product.list');
 Route::get('products/search', [App\Http\Controllers\Member\ProductController::class, 'search'])->name('product.search');
 Route::get('product/{slug}', [App\Http\Controllers\Member\ProductController::class, 'detail'])->name('product.detail');
 Route::get('cart', [App\Http\Controllers\Member\CartController::class, 'list'])->name('cart.list');
@@ -31,5 +28,8 @@ Route::group(['as' => 'member.', 'prefix' => 'member'], function () {
     
 });
 
+Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
+    Route::resource('product', App\Http\Controllers\Admin\ProductController::class);
+});
 
 require __DIR__.'/auth.php';

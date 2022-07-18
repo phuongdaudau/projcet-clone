@@ -21,11 +21,12 @@
 @section('content')
 
 <div id="grid">
+	
     @foreach($products as $item)
     @php
         $listSize = "";
-        $images = explode(",", $item->images);
-        $frontImage = $images[0];
+        $imgs = explode(",", $item->images);
+        $images = array_slice($imgs,1,3);
         foreach($item->sizes as $size){
             $listSize = $listSize .",". $size->name;
         }
@@ -34,14 +35,14 @@
         <div class="make3D">
             <div class="product-front">
                 <div class="shadow"></div>
-                <img src="{{$frontImage}}" alt="" />
+                <img src="{{ asset('storage/product/'.$images[0]) }}" alt="" />
                 <div class="image_overlay"></div>
                 <div class="add_to_cart">Add to cart</div>
                 <div class="view_gallery">View gallery</div>                
                 <div class="stats">        	
                     <div class="stats-container set-width">
                         <span class="product_price">${{$item->price}}</span>
-                        <span class="product_name">{{$item->name}}</span>    
+                        <span class="product_name"><a href="{{route('product.detail', $item->slug)}}">{{$item->name}}</a></span>    
                         <p>{{$item->category->name}}</p>                                            
                         <div class="product-options">
                             <strong>SIZES</strong>
@@ -62,7 +63,7 @@
                 <div class="carousel">
                     <ul class="carousel-container">
                         @foreach($images as $image)
-                        <li><img src="{{$image}}" alt="" /></li>
+                        <li><img src="{{ asset('storage/product/'.$image) }}" alt="" /></li>
                         @endforeach
                     </ul>
                     <div class="arrows-perspective">
@@ -85,7 +86,9 @@
     </div>    
     @endforeach
     <div class="row">
+        @if(count($products) >=6)
         {{ $products->links('vendor.pagination.bootstrap-4', ['paginator' => $products]) }}
+        @endif
     </div>
 </div>
 @endsection

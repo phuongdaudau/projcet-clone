@@ -14,15 +14,16 @@ class ProductUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $admin = Auth::user();
+        // $admin = Auth::user();
+        $admin = 1;
         $rules = [
-            'name' => ['required', 'string', 'max:100','unique:products,name'. $admin->id],
+            'name' => ['required', 'string', 'max:100','unique:products,name'],
             'price' => ['required'],
             'quantity' => ['required', 'integer', 'max:100'],
             'category' => ['required', 'integer', 'max:10'],
             'colors' => ['required', 'distinct', 'exists:colors,id'],
             'sizes' => ['required', 'distinct', 'exists:sizes,id'],
-            'description' => ['required', 'text'],
+            'description' => ['required'],
         ];
         return $rules;
     }

@@ -13,14 +13,15 @@
 @section('content')
     <div class="container-fluid">
         <!-- Vertical Layout | With Floating Label -->
-        <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
                             <h2>
-                               Add new product
+                               Edit product
                             </h2>
                         </div>
                         <div class="body">
@@ -59,8 +60,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="image">Images</label>
-                                <input type="file" name="image[]" multiple>
+                                <label for="images">Images</label>
+                                <input type="file" name="images[]" multiple>
                             </div>
                         </div>
                     </div>
@@ -101,8 +102,8 @@
                                     @foreach($sizes as $size)
                                         <div class="form-check" style="margin-right:50px">
                                             <input type="checkbox" class="form-check-input" id="size" name="sizes[]" 
-                                                @foreach($product->sizes as $productColor)
-                                                    {{$productColor->id == $color->id ? 'checked' : ''}}
+                                                @foreach($product->sizes as $productSize)
+                                                    {{$productSize->id == $size->id ? 'checked' : ''}}
                                                 @endforeach
                                             value="{{ $size->id }}" style="margin-right: 10px;">{{ $size->name }}
                                             <label class="form-check-label" for="radio1"></label>
@@ -131,7 +132,7 @@
             </div>
             
             <a  class="btn btn-danger m-t-15 waves-effect" href="{{ route('admin.product.index') }}">Back</a>
-                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+            <button type="submit" class="btn btn-primary m-t-15 waves-effect">Submit</button>
         </form>
     </div>
 @endsection

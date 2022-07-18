@@ -34,6 +34,16 @@
             </div>
             <div class="x_content">
                <table id="list-data" class="table table-striped table-bordered bulk_action">
+               <form action="{{ route('admin.product.index) }}" method="GET">
+                  <label><select name="datatable-checkbox_length" aria-controls="datatable-checkbox" class="form-control input-sm">
+                     <option value="0" selected disabled>Show entries</option>
+                     <option value="10">10</option>
+                     <option value="25">25</option>
+                     <option value="50">50</option>
+                     <option value="100">100</option>
+                  </select></label>
+            </form>
+                  <label style="float: right;"><input type="search" class="form-control input-sm" placeholder="Search for ..." aria-controls="datatable-checkbox"></label>
                   <thead>
                      <tr>
                         <th>
@@ -48,10 +58,11 @@
                         <th>Action</th>
                      </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="show-entries">
+                     @php($i=1)
                      @foreach($products as $product)
                      <tr>
-                        <td>
+                        <td>{{$i}}
                         <th><input type="checkbox" id="check-all" class="flat"></th>
                         </td>
                         <td>{{$product->id}}</td>
@@ -76,9 +87,37 @@
                            </form>
                         </td>
                      </tr>
+                     @php($i++)
                      @endforeach
                   </tbody>
                </table>
+               <div>
+                     <div class="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
+                        <ul class="pagination">
+                           <li class="paginate_button previous disabled" id="datatable_previous">
+                              <a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0">Previous</a>
+                           </li>
+                           <li class="paginate_button active">
+                              <a href="#" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a>
+                           </li>
+                           <li class="paginate_button ">
+                              <a href="#" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a>
+                           </li>
+                           <li class="paginate_button ">
+                              <a href="#" aria-controls="datatable" data-dt-idx="3" tabindex="0">3</a>
+                           </li>
+                           <li class="paginate_button ">
+                              <a href="#" aria-controls="datatable" data-dt-idx="4" tabindex="0">4</a>
+                           </li><li class="paginate_button ">
+                              <a href="#" aria-controls="datatable" data-dt-idx="5" tabindex="0">5</a>
+                           </li><li class="paginate_button ">
+                              <a href="#" aria-controls="datatable" data-dt-idx="6" tabindex="0">6</a>
+                           </li><li class="paginate_button next" id="datatable_next">
+                              <a href="#" aria-controls="datatable" data-dt-idx="7" tabindex="0">Next</a>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
             </div>
          </div>
       </div>
