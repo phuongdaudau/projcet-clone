@@ -28,12 +28,22 @@ class ProductService {
 
     public function filterProducts($params)
     {
+        $recorder = $params['recorder'] ?? 10;
         $query = Product::query();
 
         if(isset($params['category_id'])){
-           return $query->where('category_id', $params['category_id']);
+            $query->where('category_id', $params['category_id']);
         }
-        return $query->paginate($params['page']);
+
+        if(isset($params['orderBy'])){
+            $query->orderBy($params['orderBy']['colum'], $params['orderBy']['dir']);
+        }
+
+        if(isset($params['search'])){
+            $query->where('name', 'LIKE', '%'.$params['search'].'%');
+        }
+
+        return $query->paginate($recorder);
     }
 
     public function storeProduct($data){
@@ -47,7 +57,7 @@ class ProductService {
                 if (!Storage::disk('public')->exists('product')) {
                     Storage::disk('public')->makeDirectory('product');
                 }
-                $productImage = Image::make($image)->resize(333, 466)->save($imageName . '.' . $image->getClientOriginalExtension());
+                $productImage = Image::make($image)->resize(333, 466)->save($imageName);
                 Storage::disk('public')->put('product/' . $imageName, $productImage);
 
                 $imagename = $imagename. ',' . $imageName;
@@ -87,7 +97,7 @@ class ProductService {
                 if (!Storage::disk('public')->exists('product')) {
                     Storage::disk('public')->makeDirectory('product');
                 }
-                $productImage = Image::make($image)->resize(333, 466)->save($imageName . '.' . $image->getClientOriginalExtension());
+                $productImage = Image::make($image)->resize(333, 466)->save($imageName);
                 Storage::disk('public')->put('product/' . $imageName, $productImage);
 
                 $imagename = $imagename. ',' . $imageName;

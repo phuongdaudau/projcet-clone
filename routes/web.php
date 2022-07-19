@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-
-use Illuminate\Support\Facades\Auth;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,8 +25,8 @@ Route::group(['as' => 'member.', 'prefix' => 'member'], function () {
     
 });
 
-Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
-    Route::resource('product', App\Http\Controllers\Admin\ProductController::class);
-});
+// Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
+//     Route::resource('product', App\Http\Controllers\Admin\ProductController::class);
+// });
 
 require __DIR__.'/auth.php';
