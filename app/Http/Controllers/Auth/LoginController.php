@@ -38,9 +38,10 @@ class LoginController extends Controller
     {
         if (Auth::check() && Auth::gaurd('admin')) {
             $this->redirectTo = route('admin.product.index');
-        } elseif(Auth::check() && Auth::user()->role->id == 2) {
-            $this->redirectTo = route('product.list');
-        }
+        } 
+        // elseif(Auth::check() && Auth::user()->role->id == 2) {
+        //     $this->redirectTo = route('product.list');
+        // }
         $this->middleware('guest')->except('logout');
     }
 }

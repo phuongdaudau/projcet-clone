@@ -4,7 +4,15 @@
             <li><a href="{{route('product.list')}}">Home</a></li>
             <li><a href="">BRANDS</a></li>
             <li><a href="">DESIGNERS</a></li>
-            <li><a href="{{ route('login') }}">LOGIN</a></li>	                                              
+            @if(Auth::check())
+                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">LOGOUT</a></li>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                    class="d-none">
+                    @csrf
+                </form>
+            @else
+                <li><a href="{{ route('login') }}">LOGIN</a></li>
+            @endif	                                              
         </ul>
     </div>	
     <div class="col-6 pt-4">

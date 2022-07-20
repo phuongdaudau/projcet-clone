@@ -57,6 +57,7 @@
                                         <button> Search </button>
                                     </form>
                                 </div>
+                                <button onclick="multideleteproduct()"> Delete </button>
                             </div>
 
                             <thead>
@@ -77,7 +78,7 @@
                                 @foreach ($products as $key => $product)
                                     <tr>
                                         <td>{{ $key + 1 }}
-                                        <th><input type="checkbox" id="check-all" class="flat"></th>
+                                        <th><input type="checkbox" id="ids[]" class="flat" value="{{$product->id}}"></th>
                                         </td>
                                         <td>{{ $product->id }}</td>
                                         <td>{{ $product->name }}</td>
@@ -154,10 +155,58 @@
                 }
             })
         }
-    </script>
+        function multideleteproduct() {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
 
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    var val = [];
+                    $(':checkbox:checked').each(function(i){
+                        val[i] = $(this).val();
+                    });
+                    console.log(val);
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "{{ url('/admin/multidelete') }}",
+                        type: 'POST',
+                        data: {id: val, "_token": "{{ csrf_token() }}"},
+                        dataType: 'json',
+                        success: function(data){ 
+                            if(data){
+                                location.reload();
+                            }
+                        }
+                    });
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your data is safe :)',
+                        'error'
+                    )
+                }
+            })
+        }
 
-    <script type="text/javascript">
         $('#select-page').on('change', function() {
             var url = $(this).val();
             if (url) {

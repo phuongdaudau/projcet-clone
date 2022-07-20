@@ -64,7 +64,7 @@ class ProductService {
             }
         }
         $product = Product::create([
-            'admin_id' => 1,
+            'admin_id' => Auth::id(),
             'category_id' => $data['category'],
             'name' => $data['name'],
             'slug' => $slug,
@@ -104,7 +104,7 @@ class ProductService {
             }
         }
         $product->update([
-            'admin_id' => 1,
+            'admin_id' => Auth::id(),
             'category_id' => $data['category'],
             'name' => $data['name'],
             'slug' => $slug,
@@ -118,17 +118,17 @@ class ProductService {
     }
     public function deleteProduct($id)
     {
-        $product = Product::where('id', $id)->first();
-        $imgs = explode(",", $product->images);
-        $images = array_slice($imgs,1,3);
-        foreach($images as $image){
-            if (Storage::disk('public')->exists('product/' . $image)) {
-                Storage::disk('public')->delete('product/' . $image);
-            }
-        }
-        $product->colors()->detach();
-        $product->sizes()->detach();
-        $product->delete();
+        Product::destroy($id);
+        
+        // $imgs = explode(",", $product->images);
+        // $images = array_slice($imgs,1,3);
+        // foreach($images as $image){
+        //     if (Storage::disk('public')->exists('product/' . $image)) {
+        //         Storage::disk('public')->delete('product/' . $image);
+        //     }
+        // }
+        // $product->colors()->detach();
+        // $product->sizes()->detach();
     }
 
 }

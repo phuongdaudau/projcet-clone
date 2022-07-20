@@ -38,7 +38,6 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-
         $params['orderBy'] = [
             'colum' => 'id',
             'dir'   => 'desc'
@@ -153,4 +152,12 @@ class ProductController extends Controller
         $this->productService->deleteProduct($id);
         return redirect()->route('admin.product.index');
     }
+
+    public function multidelete(Request $request)
+    {
+        $params = $request->only('id');
+        $this->productService->deleteProduct($params['id']);
+        return response()->json( true );
+    }
+
 }
