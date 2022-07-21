@@ -124,6 +124,11 @@ class ProductService {
     }
     public function deleteProduct($id)
     {
+        return Product::destroy($id);
+    }
+
+    public function deleteProductImage($id)
+    {
         try {
             DB::beginTransaction();
             if(!$this->deleteImage($id)){
@@ -144,7 +149,6 @@ class ProductService {
             return false;
         }
         return true;
-
     }
 
     public function deleteImage($arrayId)
