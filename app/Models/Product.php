@@ -41,4 +41,8 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Models\Size')->withTimestamps();
     }
+    public function mainCarts()
+    {
+        return $this->hasMany('App\Models\MainCart');
+    }
 }

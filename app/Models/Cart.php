@@ -14,32 +14,20 @@ class Cart{
         }
     }
 
-    public function addCart($product, $id){
-        $newProduct = ['quantity' => 0, 'price'=> $product->price, 'productInfo' => $product];
+    public function addCart($product, $params){
+        $newProduct = ['size' => '', 'color' => '', 'quantity' => 0, 'price'=> $product->price, 'productInfo' => $product];
         if($this->products){
-            if(array_key_exists($id, $this->products)){
-                $newProduct = $this->products[$id];
+            if(array_key_exists($params['id'], $this->products)){
+                $newProduct = $this->products[$params['id']];
             }
         }
-        $newProduct['quantity']++;
+        $newProduct['size'] = $params['size'];
+        $newProduct['color'] = $params['color'];
+        $newProduct['quantity'] += $params['quantity'];;
         $newProduct['price'] = $newProduct['quantity'] * $product->price;
-        $this->products[$id] = $newProduct;
+        $this->products[$params['id']] = $newProduct;
         $this->totalPrice += $product->price;
         $this->totalQuantity++;
-    }
-
-    public function addCartFromDetail($product, $id, $quantity){
-        $newProduct = ['quantity' => 0, 'price'=> $product->price, 'productInfo' => $product];
-        if($this->products){
-            if(array_key_exists($id, $this->products)){
-                $newProduct = $this->products[$id];
-            }
-        }
-        $newProduct['quantity'] += $quantity ;
-        $newProduct['price'] = $newProduct['quantity'] * $product->price;
-        $this->products[$id] = $newProduct;
-        $this->totalPrice += $product->price;
-        $this->totalQuantity += $quantity ;
     }
 
     public function deleteItemCart($id){
