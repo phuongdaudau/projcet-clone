@@ -18,4 +18,5 @@ Route::group(['middleware' => ['auth:admin']], function (Router $router) {
     
     $router->resource('product', ProductController::class);
 
+    $router->post('multidelete', [App\Http\Controllers\Admin\ProductController::class, 'multidelete']);
 });
