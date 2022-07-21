@@ -6,10 +6,16 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductService {
     
+    public function query()
+    {
+        return Product::query();
+    }
+
     public function getListProduct(){
         return Product::latest()->get();
     }
@@ -111,24 +117,64 @@ class ProductService {
             'price' => $data['price'],
             'quantity' => $data['quantity'],
             'description' => $data['description'],
-            'images' => $imagename,
+            'images' => $imagename ?? $product->images,
         ]);
         $product->colors()->sync($data['colors']);
         $product->sizes()->sync($data['sizes']);
     }
     public function deleteProduct($id)
     {
-        Product::destroy($id);
-        
-        // $imgs = explode(",", $product->images);
-        // $images = array_slice($imgs,1,3);
-        // foreach($images as $image){
-        //     if (Storage::disk('public')->exists('product/' . $image)) {
-        //         Storage::disk('public')->delete('product/' . $image);
-        //     }
-        // }
-        // $product->colors()->detach();
-        // $product->sizes()->detach();
+        try {
+            DB::beginTransaction();
+            if(!$this->deleteImage($id)){
+                return false;
+            }
+            if(!is_array($id)){
+                $ids = array($id);
+            }
+            foreach($ids  as $key=>$id){
+                $product = Product::find($id);
+                $product->colors()->detach();
+                $product->sizes()->detach();
+                $product->delete();
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
+        return true;
+
+    }
+
+    public function deleteImage($arrayId)
+    {
+
+        if(!is_array($arrayId)){
+            $arrayId = array($arrayId);
+        }
+
+        try {
+            DB::beginTransaction();
+            foreach($arrayId as $key=>$id){
+                $rs = $this->query()->find($id);
+                 if($rs){
+                    $imgs = explode(",", $rs->images);
+                    $images = array_slice($imgs,1,3);
+                    foreach($images as $image){
+                        $path = $image;
+                        if(file_exists($path)){
+                             unlink($path);
+                        }
+                    }
+                }
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
+        return true;
     }
 
 }

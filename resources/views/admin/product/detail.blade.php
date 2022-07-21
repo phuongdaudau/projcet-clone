@@ -15,6 +15,21 @@
         .label{
             font-size: 15px;
         }
+        .body {
+            margin-top: 10px;
+            background: white;
+            border: 1px solid #463f41;
+            padding: 10px;
+            box-shadow: 5px 4px 0px 0px #888888;
+        }
+        p.form-control.date {
+            min-height: 42px;
+            padding: 10px;
+        }
+        .text-title{
+            font-weight: bolder;
+            color: black;
+        }
     </style>
 @endpush
 
@@ -25,9 +40,9 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header" style="margin-bottom: 20px;">
-                            <h1>
+                            <p> Name Product:</p>
+                            <h1 class="text-title">
                                 {{$product->name}}
-                                
                                 </h1>
                                 <small>Người tạo:  <strong><a href="">{{$product->admin->name }}</a></strong>
                                     vào {{ $product->created_at->toFormattedDateString()}}
@@ -75,15 +90,16 @@
                         <div class="body">
                             <div id="aniimated-thumbnials" class="list-unstyled row clearfix">
                                 @php
-                                    $imgs = explode(",", $product->images);
-                                    $images = array_slice($imgs,1,3);
+                                    $images = explode(",", $product->images);
                                 @endphp
                                 @foreach($images as $image)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <a href="{{ asset($image) }}" target="_blank" >
-                                            <img class="img-responsive thumbnail" src="{{ asset($image) }}">
-                                        </a>
-                                    </div>
+                                    @if ($image != '')
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                            <a href="{{ asset($image) }}" target="_blank" >
+                                                <img class="img-responsive thumbnail" src="{{ asset($image) }}">
+                                            </a>
+                                        </div>
+                                    @endif
                                 @endforeach
                             </div>
                         </div>
@@ -99,13 +115,17 @@
                             </h2>
                         </div>
                         <div class="body">
-                            <textarea id="tinymce" name="description" readonly>{{$product->description}}</textarea>
+                            {{-- <textarea id="tinymce" name="description" readonly>
+                                {{$product->description}}
+                            </textarea> --}}
+                            {!! $product->description !!}
+
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="header bg-blue">
+                    <div class="header">
                         <h2>
                             Category
                         </h2>
@@ -115,7 +135,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="header bg-blue">
+                    <div class="header">
                         <h2>
                             Colors
                         </h2>
@@ -127,7 +147,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="header bg-blue">
+                    <div class="header">
                         <h2>
                             Sizes
                         </h2>
