@@ -20,8 +20,8 @@ class CartService {
             $data['color'] = $color->name;
             $data['size'] = $size->name;
             $data['quantity'] = $params['quantity'];
-            
-            if (Auth::check()){
+
+            if (auth('web')->user()){
                 if (Session::get('Cart') != null){
                     foreach (Session::get('Cart')->products as $product_id => $item){
                         $cart = MainCart::create([
@@ -61,7 +61,7 @@ class CartService {
     }
 
     public function saveQtyItemCart($request, $id, $quanity){
-        if(Auth::check()){
+        if(auth('web')->user()){
             MainCart::where('product_id', $id)->update(['quantity'=> $quanity]);
         }else{
             $oldCart = Session('Cart') ? Session('Cart') : null;
@@ -72,7 +72,7 @@ class CartService {
     }
 
     public function deleteListCart($request, $id){
-        if(Auth::check()){
+        if(auth('web')->user()){
             MainCart::where('product_id', $id)->delete();
         }else{
             $oldCart = Session('Cart') ? Session('Cart') : null;

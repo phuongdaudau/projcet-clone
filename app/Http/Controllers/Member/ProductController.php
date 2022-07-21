@@ -37,8 +37,7 @@ class ProductController extends Controller
             'colum' => 'id',
             'dir'   => 'desc'
         ];
-        $params['recorder'] = $request->get('recorder');
-
+        $params['recorder'] = $request->get('recorder') ?? 6;
         if($request->get('search')){
             $params['search'] = $request->get('search');
         }
