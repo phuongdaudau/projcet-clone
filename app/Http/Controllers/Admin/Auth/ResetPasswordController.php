@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Admin;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 
@@ -47,8 +49,40 @@ class ResetPasswordController extends Controller
 
     public function showResetForm(Request $request, $token = null)
     {
-        return view('admin.auth.passwords.reset')->with(
-            ['token' => $token, 'email' => $request->email]
-        );
+        return view('admin.auth.passwords.reset');
+    }
+
+    public function requestPassword(Request $request)
+    {
+        $email = $request->only('email');
+        $admin = Admin::where('email', $email)->first();
+        if(!$admin){
+            return redirect()->back()->with('error', 'email');
+        }
+        $details = [
+            'title' => 'Reset Password',
+            'url' => route('admin.reset_password_admin',  ['token' => base64_encode(
+                json_encode([
+                    'id' => $admin->id
+                ])
+            )])
+        ];
+        Mail::to($email)->send(new \App\Mail\Mail($details));
+        return redirect()->route('admin.login')->with('success', 'email');
+
+    }
+
+    public function resetPassword($token)
+    {
+        $adminId = json_decode(base64_decode($token));
+        return view('admin.auth.register')->with(['id' => $adminId->id]);
+    }
+
+    public function resetPasswordAdmin()
+    {
+        Admin::find(request()->id)->update([
+            'password' => Hash::make(request()->password)
+        ]);
+        return redirect()->route('admin.login')->with('success', 'email');
     }
 }
