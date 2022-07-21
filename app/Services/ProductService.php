@@ -6,10 +6,16 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductService {
     
+    public function query()
+    {
+        return Product::query();
+    }
+
     public function getListProduct(){
         return Product::latest()->get();
     }
@@ -111,18 +117,16 @@ class ProductService {
             'price' => $data['price'],
             'quantity' => $data['quantity'],
             'description' => $data['description'],
-            'images' => $imagename,
+            'images' => $imagename ?? $product->images,
         ]);
         $product->colors()->sync($data['colors']);
         $product->sizes()->sync($data['sizes']);
     }
     public function deleteProduct($id)
     {
-        // dd($id);
-        // Product::destroy($id);
         try {
             DB::beginTransaction();
-            if(!$this->deleteImage(new Product(), $id)){
+            if(!$this->deleteImage($id)){
                 return false;
             }
             if(!is_array($id)){
@@ -132,6 +136,7 @@ class ProductService {
                 $product = Product::find($id);
                 $product->colors()->detach();
                 $product->sizes()->detach();
+                $product->delete();
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -142,21 +147,17 @@ class ProductService {
 
     }
 
-    public function deleteImage($model, $arrayId)
+    public function deleteImage($arrayId)
     {
-        $model = $model;
 
         if(!is_array($arrayId)){
             $arrayId = array($arrayId);
-        }
-        if(!$mode){
-            return false;
         }
 
         try {
             DB::beginTransaction();
             foreach($arrayId as $key=>$id){
-                $rs = $mode->find($id);
+                $rs = $this->query()->find($id);
                  if($rs){
                     $imgs = explode(",", $rs->images);
                     $images = array_slice($imgs,1,3);
@@ -170,7 +171,7 @@ class ProductService {
             }
             DB::commit();
         } catch (\Exception $e) {
-            DB::rollback()
+            DB::rollback();
             return false;
         }
         return true;

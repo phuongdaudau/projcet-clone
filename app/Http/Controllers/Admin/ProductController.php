@@ -149,8 +149,10 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $this->productService->deleteProduct($id);
-        return redirect()->route('admin.product.index');
+        if(!$this->productService->deleteProduct($id)){
+            redirect()->route('admin.product.index')->with('error', 'error');
+        }
+        return redirect()->route('admin.product.index')->with('success' , 'success');
     }
 
     public function multidelete(Request $request)

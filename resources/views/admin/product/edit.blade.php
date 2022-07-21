@@ -63,6 +63,33 @@
                                 <label for="images">Images</label>
                                 <input type="file" name="images[]" multiple>
                             </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="header">
+                                            <h2>
+                                                Images
+                                            </h2>
+                                        </div>
+                                        <div class="body">
+                                            <div id="aniimated-thumbnials" class="list-unstyled row clearfix">
+                                                @php
+                                                    $images = explode(",", $product->images);
+                                                @endphp
+                                                @foreach($images as $image)
+                                                    @if ($image != '')
+                                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                                            <a href="{{ asset($image) }}" target="_blank" >
+                                                                <img class="img-responsive thumbnail" src="{{ asset($image) }}">
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 </div>
