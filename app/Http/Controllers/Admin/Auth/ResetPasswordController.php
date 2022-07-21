@@ -59,15 +59,33 @@ class ResetPasswordController extends Controller
         if(!$admin){
             return redirect()->back()->with('error', 'email');
         }
-        $details = [
-            'title' => 'Reset Password',
-            'url' => route('admin.reset_password_admin',  ['token' => base64_encode(
-                json_encode([
-                    'id' => $admin->id
-                ])
-            )])
-        ];
-        Mail::to($email)->send(new \App\Mail\Mail($details));
+        // $details = [
+        //     'title' => 'Reset Password',
+        //     'url' => route('admin.reset_password_admin',  ['token' => base64_encode(
+        //         json_encode([
+        //             'id' => $admin->id
+        //         ])
+        //     )])
+        // ];
+        // Mail::to($email)->send(new \App\Mail\Mail($details));
+        $listId = env('MAILCHIMP_LIST_ID');
+
+        $mailchimp = new \Mailchimp(env('MAILCHIMP_API_KEY'));
+
+        $campaign = $mailchimp->campaigns->create('regular', [
+            'list_id' => $listId,
+            'subject' => 'Example Mail',
+            'from_email' => 'phuongdauduaim@gmail.com',
+            'from_name' => 'Phuong',
+            'to_name' => 'Admin'
+
+        ], [
+            'html' => $request->input('content'),
+            'text' => strip_tags($request->input('content'))
+        ]);
+
+        //Send campaign
+        $mailchimp->campaigns->send($campaign['id']);
         return redirect()->route('admin.login')->with('success', 'email');
 
     }
