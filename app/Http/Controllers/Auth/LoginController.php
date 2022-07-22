@@ -90,7 +90,4 @@ class LoginController extends Controller
         return redirect()->intended('/');
     }
 
-    public function redirectTo(){
-        dd(auth('web')->user());
-    }
 }
