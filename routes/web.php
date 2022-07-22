@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['middleware' => ['guest']], function () {
+    Auth::routes(['logout' => false]);
+});
+
+
 Route::get('/', [App\Http\Controllers\Member\ProductController::class, 'list'])->name('product.list');
 Route::get('products/search', [App\Http\Controllers\Member\ProductController::class, 'search'])->name('product.search');
 Route::get('product/{slug}', [App\Http\Controllers\Member\ProductController::class, 'detail'])->name('product.detail');
@@ -24,6 +29,11 @@ Route::get('deleteListCart/{id}', [App\Http\Controllers\Member\CartController::c
 Route::group(['as' => 'member.', 'prefix' => 'member'], function () {
     
 });
+
+Route::post('/add-cart-ajax',[App\Http\Controllers\Member\CartController::class, 'saveCartAjax'])->name('cart_ajax');
+Route::get('/show-cart-ajax',[App\Http\Controllers\Member\CartController::class, 'showCartAjax'])->name('show_cart_ajax');
+Route::post('/update-cart-ajax',[App\Http\Controllers\Member\CartController::class, 'updateCartAjax'])->name('update_cart_ajax');
+Route::post('/delete-cart-ajax',[App\Http\Controllers\Member\CartController::class, 'deleteCartAjax'])->name('delete_cart_ajax');
 
 // Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
 //     Route::resource('product', App\Http\Controllers\Admin\ProductController::class);

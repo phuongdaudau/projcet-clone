@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title') </title>
+    <meta name="csrf-token" content="{{csrf_token()}}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -23,5 +24,26 @@
     <script  src="{{ asset('js/script.js') }}"></script>
     <script  src="{{ asset('js/myjs.js') }}"></script>
     @stack('script')
+    <script>
+        $('.delete-to-cart').click(function() {
+            var id = $(this).data('session_id_cart');
+            console.log(id);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '{{ route('delete_cart_ajax') }}',
+                method: 'POST',
+                data: {
+                    cart_product_id: id,
+                },
+
+                success: function(data) {
+                    window.location.reload()
+                }
+
+            });
+        });
+    </script>
 </body>
 </html>

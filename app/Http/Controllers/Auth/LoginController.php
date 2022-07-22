@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -36,12 +36,17 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        if (Auth::check() && Auth::gaurd('admin')) {
-            $this->redirectTo = route('admin.product.index');
+        dd(1);
+        if (Auth::check() && Auth::guard('web')) {
+            $this->redirectTo();
         } 
         // elseif(Auth::check() && Auth::user()->role->id == 2) {
         //     $this->redirectTo = route('product.list');
         // }
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectTo(){
+        dd(auth('web')->user());
     }
 }

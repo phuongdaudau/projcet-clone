@@ -34,4 +34,24 @@ class cartController extends Controller
         $cartAuth = $this->cartService->getCart(Auth::id());
         return view('member.cart.list-cart-item', compact('cartAuth'));
     }
+
+    public function saveCartAjax(Request $request)
+    {
+        return $this->cartService->saveCartAjax($request->all());
+    }   
+
+    public function showCartAjax()
+    {
+        return view('member.cart.cart_ajax');
+    }
+
+    public function deleteCartAjax(Request $request){
+        return $this->cartService->deleteCartAjax($request->all());
+    }
+
+
+    public function updateCartAjax(Request $request)
+    {
+        return $this->cartService->updateCartAjax($request->all());
+    }
 }

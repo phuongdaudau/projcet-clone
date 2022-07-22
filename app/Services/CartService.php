@@ -115,4 +115,83 @@ class CartService {
         return $flag;
     }
 
+    public function saveCartAjax($data)
+    {
+        $session_id = substr(md5(microtime()),rand(0,26),5);
+        $cart = Session::get('cart');
+        if($cart){
+            $is_avaiable = 0;
+            foreach($cart as $key => $val){
+                if($val['product_id']==$data['cart_product_id']){
+                    $is_avaiable++;
+                    $qty = $cart[$key]['product_qty'];
+                    $cart[$key]['product_qty'] = (int)$qty + 1;
+                }
+                Session::put('cart', $cart);
+            }
+            if($is_avaiable == 0){
+                $cart[] = array(
+                    'session_id' => $session_id,
+                    'product_id' => $data['cart_product_id'],
+                    'product_size' => $data['cart_product_size'] ?? 'S',
+                    'product_color' => $data['cart_product_color'] ?? 'Black',
+                    'product_qty' => $data['cart_product_qty'],
+                    'product_name' => $data['cart_product_name'],
+                    'product_image' => $data['cart_product_image'],
+                    'product_price' => $data['cart_product_price'],
+                );
+                Session::put('cart', $cart);
+            }
+        }else{
+            $cart[] = array(
+                'session_id' => $session_id,
+                'product_id' => $data['cart_product_id'],
+                'product_size' => $data['cart_product_size'] ?? 'S',
+                'product_color' => $data['cart_product_color'] ?? 'Black',
+                'product_qty' => $data['cart_product_qty'],
+                'product_name' => $data['cart_product_name'],
+                'product_image' => $data['cart_product_image'],
+                'product_price' => $data['cart_product_price'],
+            );
+            Session::put('cart',$cart);
+        }
+        Session::save();
+    }
+
+    public function deleteCartAjax($data)
+    {
+        $cart = Session::get('cart');
+        $session_id = $data['cart_product_id'];
+        if($cart==true){
+            foreach($cart as $key => $val){
+                if($val['session_id']== $session_id){
+                    unset($cart[$key]);
+                }
+            }
+            Session::put('cart',$cart);
+           return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function updateCartAjax($data)
+    {
+        $cart = Session::get('cart');
+        if($cart==true){
+            foreach($cart as $session => $val){
+                if($val['session_id']== $data['cart_product_id']){
+                    $cart[$session]['product_qty'] = $data['cart_product_qty'];
+                }
+            }
+            Session::put('cart',$cart);
+            return $data['cart_product_qty'];
+        }
+        return 0;
+    }
+
+    public function deleteAllCart()
+    {
+        Session::forget('cart');
+    }
 }
