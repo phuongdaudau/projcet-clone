@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>{{ $details['title'] }}</h1>
-    <a href="{{ $details['url'] }}"> Reset Password </a>
+    <a href="{{ $details['url'] }}">Click here to Reset Password </a>
     <p>Thank you</p>
 </body>
 </html>

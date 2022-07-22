@@ -43,10 +43,10 @@
                 ${{ $item['price'] }}
                 </td>
                 <td class="shoping__cart__total">
-                    <span class="save" id="{{$item['productInfo']->id}}" >Save</span>
+                    <span class="save" id="{{$item['productInfo']->id}}" ><i class="fa-solid fa-check"></i></span>
                 </td>
                 <td class="shoping__cart__total">
-                    <span class="delete" id="{{$item['productInfo']->id}}" >Delete</sp>
+                    <span class="delete" id="{{$item['productInfo']->id}}" ><i class="fa-solid fa-x"></i></span>
                 </td>
             </tr>
             @endforeach
@@ -81,10 +81,10 @@
                     ${{  $item->product->price * $item['quantity']}}
                     </td>
                     <td class="shoping__cart__total">
-                        <span class="save" id="{{$item->product->id}}" >Save</span>
+                        <span class="save" id="{{$item->product->id}}" ><i class="fa-solid fa-check"></i></span>
                     </td>
                     <td class="shoping__cart__total">
-                        <span class="delete" id="{{$item->product->id}}" >Delete</sp>
+                        <span class="delete" id="{{$item->product->id}}" ><i class="fa-solid fa-x"></i></span>
                     </td>
                 </tr>
             @endforeach
