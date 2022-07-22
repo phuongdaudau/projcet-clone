@@ -21,12 +21,4 @@ Route::get('saveQtyItemCart/{id}/{quantity}', [App\Http\Controllers\Member\CartC
 Route::get('deleteListCart/{id}', [App\Http\Controllers\Member\CartController::class, 'deleteListCart']);
 
 
-Route::group(['as' => 'member.', 'prefix' => 'member'], function () {
-    
-});
-
-// Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
-//     Route::resource('product', App\Http\Controllers\Admin\ProductController::class);
-// });
-
 require __DIR__.'/auth.php';
