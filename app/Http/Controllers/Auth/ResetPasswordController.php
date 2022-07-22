@@ -71,7 +71,7 @@ class ResetPasswordController extends Controller
         return view('auth.update')->with(['id' => $memberId->id]);
     }
 
-    public function resetPasswordmember()
+    public function resetPasswordMember()
     {
         Member::find(request()->id)->update([
             'password' => Hash::make(request()->password)
