@@ -7,9 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\MainCart;
-use App\Models\Member;
-use Illuminate\Support\Facades\Session;
+use App\Services\CartService;
 
 class LoginController extends Controller
 {
@@ -33,14 +31,16 @@ class LoginController extends Controller
      */
     // protected $redirectTo = RouteServiceProvider::HOME;
     protected $redirectTo = '/';
+    protected CartService $cartService;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(CartService $cartService)
     {
+        $this->cartService = $cartService;
         $this->middleware('guest:web')->except('logout');
     }
 
@@ -60,23 +60,12 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
         if (Auth::guard('web')->attempt($credentials)) {
-            if (Session::get('Cart') != null){
-                $email = $request->only('email');
-                $member = Member::where('email', $email)->first();
-                foreach (Session::get('Cart')->products as $product_id => $item){
-                    $cart = MainCart::create([
-                        'product_id' => $product_id,
-                        'member_id' => $member->id,
-                        'color' => $item['color'],
-                        'size' =>$item['size'],
-                        'quantity' => $item['quantity']
-                    ]);
-                }
-                $request->Session()->forget('Cart');
-            }
+            $this->cartService->insertCartIfAuthentication($request);
             $request->session()->regenerate();
             return redirect()->intended('/');
-        } 
+        } else{
+            return redirect()->route('login');
+        }
     }
 
     protected function guard()
