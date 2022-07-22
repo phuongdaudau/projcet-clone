@@ -22,30 +22,15 @@ class CartService {
             $data['quantity'] = $params['quantity'];
 
             if (auth('web')->user()){
-                if (Session::get('Cart') != null){
-                    foreach (Session::get('Cart')->products as $product_id => $item){
-                        $cart = MainCart::create([
-                            'product_id' => $product_id,
-                            'member_id' => Auth::id(),
-                            'color' => $item['color'],
-                            'size' =>$item['size'],
-                            'quantity' => $item['quantity']
-                        ]);
-                    }
-                    $request->Session()->forget('Cart');
-                }
-                else
-                {
-                    $flagCheck = $this->checkDuplicate($data);
-                    if($flagCheck){
-                        $product = MainCart::where('product_id', $data['id'])
-                                            ->where('member_id', Auth::id())
-                                            ->where('color', $data['color'])
-                                            ->where('size', $data['size'])->first();
-                        $product->update(['quantity'=> $product->quantity + $data['quantity']]);
-                    }else{
-                        $this->insertCart($data);
-                    }
+                $flagCheck = $this->checkDuplicate($data);
+                if($flagCheck){
+                    $product = MainCart::where('product_id', $data['id'])
+                                        ->where('member_id', Auth::id())
+                                        ->where('color', $data['color'])
+                                        ->where('size', $data['size'])->first();
+                    $product->update(['quantity'=> $product->quantity + $data['quantity']]);
+                }else{
+                    $this->insertCart($data);
                 }
             }
             else

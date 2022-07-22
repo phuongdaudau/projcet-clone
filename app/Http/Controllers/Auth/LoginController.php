@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Models\MainCart;
+use App\Models\Member;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -28,6 +32,7 @@ class LoginController extends Controller
      * @var string
      */
     // protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -36,14 +41,53 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        dd(1);
-        if (Auth::check() && Auth::guard('web')) {
-            $this->redirectTo();
+        $this->middleware('guest:web')->except('logout');
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $request){
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+        if (Auth::guard('web')->attempt($credentials)) {
+            if (Session::get('Cart') != null){
+                $email = $request->only('email');
+                $member = Member::where('email', $email)->first();
+                foreach (Session::get('Cart')->products as $product_id => $item){
+                    $cart = MainCart::create([
+                        'product_id' => $product_id,
+                        'member_id' => $member->id,
+                        'color' => $item['color'],
+                        'size' =>$item['size'],
+                        'quantity' => $item['quantity']
+                    ]);
+                }
+                $request->Session()->forget('Cart');
+            }
+            $request->session()->regenerate();
+            return redirect()->intended('/');
         } 
-        // elseif(Auth::check() && Auth::user()->role->id == 2) {
-        //     $this->redirectTo = route('product.list');
-        // }
-        $this->middleware('guest')->except('logout');
+    }
+
+    protected function guard()
+    {
+        return Auth::guard('web');
+    }
+
+    public function logout()
+    {
+        Auth::guard('web')->logout();
+        return redirect()->intended('/');
     }
 
     public function redirectTo(){

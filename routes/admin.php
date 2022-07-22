@@ -2,7 +2,6 @@
 
 use Illuminate\Routing\Router;
 
-
 Route::group(['middleware' => ['guest:admin']], function (Router $router) {
     Auth::routes(['register' => false, 'reset' => false]);
     $router->get('reset-password', [\App\Http\Controllers\Admin\Auth\ResetPasswordController::class, 'showResetForm'])->name('reset_password');
