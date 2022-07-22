@@ -37,8 +37,8 @@ class ProductService {
         $recorder = $params['recorder'] ?? 10;
         $query = Product::query();
 
-        if(isset($params['category_id'])){
-            $query->where('category_id', $params['category_id']);
+        if(isset($params['category'])){
+            $query->where('category_id', $params['category']);
         }
 
         if(isset($params['orderBy'])){

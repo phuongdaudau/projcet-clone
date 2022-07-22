@@ -42,8 +42,8 @@ class ProductController extends Controller
             $params['search'] = $request->get('search');
         }
 
-        if($request->get('category_id') && $request->get('category_id') != 0){
-            $params['category_id'] = $request->get('category_id');
+        if($request->get('category') && $request->get('category') != 0){
+            $params['category'] = $request->get('category');
         }
 
         $products = $this->productService->filterProducts($params);
