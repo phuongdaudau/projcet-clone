@@ -29,6 +29,7 @@ class LoginController extends Controller
      *
      * @var string
      */
+    // protected $redirectTo = RouteServiceProvider::HOME;
     protected $redirectTo = '/';
     protected CartService $cartService;
 
@@ -77,4 +78,5 @@ class LoginController extends Controller
         Auth::guard('web')->logout();
         return redirect()->intended('/');
     }
+
 }

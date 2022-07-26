@@ -47,7 +47,6 @@ class ProductController extends Controller
         }
 
         $products = $this->productService->filterProducts($params);
-
         $sizes = $this->sizeService->getListSize();
         $colors = $this->colorService->getListColor();
         $categories = $this->categoryService->getListCategory();

@@ -34,7 +34,7 @@
                                     @endphp
                                     <tr>
                                         <td class="shoping__cart__item">
-                                            <img style="width: 150px;" src="{{ asset('storage/product/'.$images[1]) }}" alt="">
+                                            <img style="width: 150px;" src="{{ asset($images[1]) }}" alt="">
                                             <h5><a href="{{route('product.detail', $item['productInfo']->slug)}}">{{$item['productInfo']->name }}</a></h5>
                                         </td> 
                                         <td class="shoping__cart__price">
@@ -60,7 +60,7 @@
                                             <span class="save" id="{{$item['productInfo']->id}}" >Save</span>
                                         </td>
                                         <td class="shoping__cart__total">
-                                            <span class="delete" id="{{$item['productInfo']->id}}" >Delete</sp>
+                                            <span class="delete" id="{{$item['productInfo']->id}}" >Delete</span>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -72,7 +72,7 @@
                                         @endphp
                                         <tr>
                                             <td class="shoping__cart__item">
-                                                <img style="width: 100px;" src="{{ asset('storage/product/'.$images[1]) }}" alt="">
+                                                <img style="width: 100px;" src="{{ asset($images[1]) }}" alt="">
                                                 <h5><a href="{{route('product.detail', $item->product->slug)}}">{{$item->product->name }}</a></h5>
                                             </td> 
                                             <td class="shoping__cart__price">
@@ -95,10 +95,10 @@
                                             ${{ $item->product->price * $item['quantity'] }}
                                             </td>
                                             <td class="shoping__cart__total">
-                                                <span class="save" id="{{$item->product->id}}" >Save</span>
+                                                <span style="cursor: pointer;" class="save" id="{{$item->product->id}}" >Save</span>
                                             </td>
                                             <td class="shoping__cart__total">
-                                                <span class="delete" id="{{$item->product->id}}" >Delete</sp>
+                                                <span style="cursor: pointer;" class="delete" id="{{$item->product->id}}" >Delete</span>
                                             </td>
                                         </tr>
                                     @endforeach

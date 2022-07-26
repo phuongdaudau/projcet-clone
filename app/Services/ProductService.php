@@ -25,7 +25,7 @@ class ProductService {
     }
 
     public function getProductBySlug($slug){
-        return Product::where('slug', $slug)->first();
+        return Product::where('slug', $slug)->orWhere('id', $slug)->first();
     }
 
     public function getProductById($id){
